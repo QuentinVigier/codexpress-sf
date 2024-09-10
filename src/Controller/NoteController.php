@@ -33,7 +33,7 @@ class NoteController extends AbstractController
         ]);
     }
     
-    #[Route('/my-notes', name: 'app_home')]
+    #[Route('/my-notes', name: 'app_my-note')]
     public function myNote(): Response
     {
         return $this->render('note/note.html.twig', []);

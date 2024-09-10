@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    
+{% endblock %}
+
+{% block body %}
+    <h1>Toutes les notes</h1>
+    {{ dump(notes) }}
+    
+    {# {% for item in notes %}    
+        {{ dump(item.creator.password) }}
+    {% endfor %} #}
+{% endblock %}

@@ -1,5 +1,7 @@
 <nav class="flex justify-between items-center bg-neutral-100 p-2">
-	<img src="https://avatar.iran.liara.run/public/29" alt="logo" width="32" class="">
+	<a href="{{ path('app_home') }}">
+		<img src="{{ asset('/img/logo_dark.svg') }}" alt="logo" class="shadow-md rounded-full hover:scale-95 transition-transform duration-200 ease-in-out">
+	</a>
 	<div class="flex justify-between items-center gap-4">
 		<form action="" method="post" class="flex items-center border-2 border-neutral-400 rounded-md p-2">
 			<input type="hidden" name="csrf_token" value="{{ csrf_token('authenticate') }}">

@@ -12,12 +12,24 @@
     {{ form_errors(registrationForm) }}
 
     {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.username, {
+            attr: {
+                class: 'border-2 border-violet-950 rounded-md p-2 w-full focus:border-violet-600'
+            }
+        }) }}
+        {{ form_row(registrationForm.email, {
+            attr: {
+                class: 'border-2 border-violet-950 rounded-md p-2 w-full focus:border-violet-600'
+            }
+        }) }}
         {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
+            label: 'Password',
+            attr: {
+                class: 'border-2 border-violet-950 rounded-md p-2 w-full focus:border-violet-600'
+            }
         }) }}
         {{ form_row(registrationForm.agreeTerms) }}
 
-        <button type="submit" class="btn">Register</button>
+        <button type="submit" class="p-2 bg-green-500">Register</button>
     {{ form_end(registrationForm) }}
 {% endblock %}

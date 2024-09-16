@@ -3,11 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Note;
+use App\Form\NoteType;
 use App\Repository\NoteRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/notes')] // Suffixe pour les routes du controller
 class NoteController extends AbstractController
@@ -20,7 +24,7 @@ class NoteController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_note_show', methods: ['GET'])]
+    #[Route('/n/{slug}', name: 'app_note_show', methods: ['GET'])]
     public function show(string $slug, NoteRepository $nr): Response
     {
         // TODO: Mettre en place le filtre pour les notes privées
@@ -29,7 +33,7 @@ class NoteController extends AbstractController
         ]);
     }
 
-    #[Route('/{username}', name: 'app_note_user', methods: ['GET'])]
+    #[Route('/u/{username}', name: 'app_note_user', methods: ['GET'])]
     public function userNotes(
         string $username,
         UserRepository $user, // Cette fois on utilise le repository User
@@ -41,14 +45,55 @@ class NoteController extends AbstractController
         ]);
     }
 
+
+
+
+
+
+
     #[Route('/new', name: 'app_note_new', methods: ['GET', 'POST'])]
-    public function new(): Response
+    public function new(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
-        // TODO: Formulaire de modification et traitement des données
+        $form = $this->createForm(NoteType::class); // Chargement du formulaire
+        $form = $form->handleRequest($request); // Recuperation des données de la requête POST
+
+        // Traitement des données
+        if ($form->isSubmitted() && $form->isValid()) {
+            $note = new Note();
+            $note
+                ->setTitle($form->get('title')->getData())
+                ->setSlug($slugger->slug($note->getTitle()))
+                ->setContent($form->get('content')->getData())
+                ->setPublic($form->get('is_public')->getData())
+                ->setCategory($form->get('category')->getData())
+                ->setCreator($form->get('creator')->getData())
+            ;
+            $em->persist($note);
+            $em->flush();
+            
+            $this->addFlash('success', 'Your note has been created');
+            return $this->redirectToRoute('app_note_show', ['slug' => $note->getSlug()]);
+        }
         return $this->render('note/new.html.twig', [
-            // TODO: Formulaire à envoyer à la vue Twig
+            'noteForm' => $form
         ]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     #[Route('/edit/{slug}', name: 'app_note_edit', methods: ['GET', 'POST'])]
     public function edit(string $slug, NoteRepository $nr): Response

@@ -10,6 +10,7 @@
 			<button type="submit">{{ ux_icon('mdi:search', { 'class': 'h-6 w-6 text-neutral-600 hover:text-violet-600' }) }}</button>
 		</form>
         <div class="flex items-center justify-between gap-4">
+		{% if app.user %}
             <a href="#" class="p-2 rounded-md bg-slate-200 md:hidden">
 				{{ ux_icon('mdi:search', { 'class': 'h-6 w-6 text-neutral-600 hover:text-violet-600' }) }}
 			</a>
@@ -22,11 +23,10 @@
             <a href="{{ path('app_note_user', { 'username': app.user.username ?? 'martin' })}}" class="transition-transform duration-200 ease-in-out rounded-full shadow-md hover:scale-95">
 				<img src="https://avatar.iran.liara.run/public/50" alt="logo" width="48" class="rounded-full">
 			</a>
-			
-			{% if app.user is not null %}
 			<a href="{{ path('app_logout') }}" class="p-2 rounded-md bg-slate-200">
 				{{ ux_icon('mdi:logout', { 'class': 'h-6 w-6 text-neutral-600 hover:text-violet-600' }) }}
 			</a>
+			{% else %}
 			{% endif %}
         </div>
 	</div>

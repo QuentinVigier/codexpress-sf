@@ -76,7 +76,7 @@ class AppFixtures extends Fixture
                 $note
                     ->setTitle($faker->sentence())
                     ->setSlug($this->slug->slug($note->getTitle()))
-                    ->setContent($faker->paragraphs(4, true))
+                    ->setContent($faker->randomHtml())
                     ->setPublic($faker->boolean(50))
                     ->setViews($faker->numberBetween(100, 10000))
                     ->setCreator($user)

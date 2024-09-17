@@ -27,6 +27,9 @@
 				{{ ux_icon('mdi:logout', { 'class': 'h-6 w-6 text-neutral-600 hover:text-violet-600' }) }}
 			</a>
 			{% else %}
+			<a href="{{ path('app_login') }}" class="p-2 rounded-md bg-slate-200">
+				{{ ux_icon('mdi:login', { 'class': 'h-6 w-6 text-neutral-600 hover:text-violet-600' }) }}
+			</a>
 			{% endif %}
         </div>
 	</div>

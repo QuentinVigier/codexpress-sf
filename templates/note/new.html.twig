@@ -5,5 +5,10 @@
 {% endblock %}
 
 {% block body %}
-    {{ form(noteForm) }}
-{% endblock %}
+	{# {% if app.user is defined %}
+		{{ include('components/denied.html.twig') }} 
+        Access denied
+	{% else %}
+		{{ form(noteForm) }}{% endif %} #}
+        {{ form(noteForm) }}
+	{% endblock %}

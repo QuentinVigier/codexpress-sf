@@ -28,6 +28,19 @@ class NoteRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findByCreator($id): array
+    {
+        return $this->createQueryBuilder('n')
+            ->where('n.is_public = true')
+            ->andWhere('n.creator = :id')
+            ->setParameter('id', $id)
+            ->orderBy('n.created_at', 'DESC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     //    /**
     //     * @return Note[] Returns an array of Note objects
     //     */

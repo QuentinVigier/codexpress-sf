@@ -30,7 +30,7 @@
         <aside class="flex flex-col gap-4 md:col-span-1">
             <div class="flex flex-col gap-4 p-4 mb-4 border rounded-md">
                 <div class="flex items-center gap-2">
-                    <img src="{{ note.creator.image ?? 'https://avatar.iran.liara.run/public/50' }}" alt="{{ note.creator.username }}" class="inline-block w-10 h-10 rounded-full">
+                    <img src="{{ '/images/uploads/' ~ app.user.image ?? 'default.png' }}" alt="{{ note.creator.username }}" class="inline-block w-10 h-10 rounded-full">
                     <div class="flex flex-col gap-1">
                         <p class="text-xl font-bold">{{ note.creator.username }}</p>
                         <p class="text-sm text-slate-600">Member since {{ note.creator.createdAt|time_diff }} ago</p>
@@ -54,7 +54,7 @@
                     {% endfor %} #}
                 </div>
             </div>
-            {# <div class="grid grid-cols-1 gap-4">
+            <div class="grid grid-cols-1 gap-4">
                 {% for item in creatorNotes %}
                     <a href="{{ path('app_note_show', {'slug': item.slug}) }}" class="flex flex-col p-4 mb-4 border rounded-md md:p-6">
                         <p class="mb-1 text-base font-semibold">{{ item.title|slice(0,22) }}...</p>
@@ -64,7 +64,7 @@
                         </p>
                     </a>
                 {% endfor %}
-            </div> #}
+            </div>
         </aside>
     </section>
     <div class="max-w-screen-lg px-4 pb-6 mx-auto md:pb-16">

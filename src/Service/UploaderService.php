@@ -3,14 +3,8 @@
 namespace App\Service;
 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-/**
- * Service de téléversement de fichier dans l'application CodeXpress
- * - Images (.jpg, .jpeg, .png, .gif)
- * - Documents (Plus tard)
- * 
- *  Méthodes: Téléverser, Supprimer
- */
 class UploaderService
 {
     private $param;
@@ -20,16 +14,27 @@ class UploaderService
         $this->param = $parameterBag;
     }
 
-    public function uploadImage($file): string
+    public function uploadImage(UploadedFile $file): string
     {
         try {
-            // $orignalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $fileName = uniqid('image-') . '.' . $file->guessExtension();
             $file->move($this->param->get('uploads_images_directory'), $fileName);
 
-            return 'images/uploads/' . $fileName;
+            return $fileName;
         } catch (\Exception $e) {
-            throw new \Exception('An error occured while uploading the image: ' . $e->getMessage());
+            throw new \Exception('An error occurred while uploading the image: ' . $e->getMessage());
+        }
+    }
+
+    public function deleteImage(string $fileName): void
+    {
+        try {
+            $filePath = $this->param->get('uploads_images_directory') . '/' . $fileName;
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        } catch (\Exception $e) {
+            throw new \Exception('An error occurred while deleting the image: ' . $e->getMessage());
         }
     }
 }

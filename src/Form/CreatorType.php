@@ -16,7 +16,16 @@ class CreatorType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', EmailType::class)
+            ->add('email', EmailType::class, [
+                'row_attr' => ['class' => 'flex flex-col gap-1'],
+                'label' => 'Choose a new username',
+                'label_attr' => ['class' => 'text-violet-950 font-semibold w-full'],
+                'attr' => [
+                    'class' => 'border-2 border-violet-950 rounded-md p-2 w-full focus:border-violet-600',
+                ],
+                'help' => 'This is the title of your note',
+                'help_attr' => ['class' => 'text-sm text-violet-600'],
+            ])
             ->add('image', DropzoneType::class, [
                 'attr' => ['placeholder' => 'Drag and drop photo here'],
                 'mapped' => false,

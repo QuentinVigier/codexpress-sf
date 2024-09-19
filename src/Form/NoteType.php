@@ -8,11 +8,12 @@ use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NoteType extends AbstractType
@@ -51,6 +52,8 @@ class NoteType extends AbstractType
             ->add('creator', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'username',
+                'data' => $options['current_user'],  // Set the default value to the current user
+                'disabled' => true,  // Optional: Disable the field so the user cannot change it
             ])
             ->add('submit', SubmitType::class)
         ;
@@ -60,6 +63,7 @@ class NoteType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Note::class,
+            'current_user' => null,  // Define a new option for the current user
         ]);
     }
 }

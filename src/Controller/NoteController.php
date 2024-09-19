@@ -63,7 +63,11 @@ class NoteController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $form = $this->createForm(NoteType::class); // Chargement du formulaire
+        $note = new Note();
+        $user = $this->getUser();  // Get the currently logged-in user
+        $form = $this->createForm(NoteType::class, $note, [
+            'current_user' => $user,  // Pass the current user to the form
+        ]);
         $form = $form->handleRequest($request); // Recuperation des données de la requête POST
 
         // Traitement des données
@@ -84,7 +88,7 @@ class NoteController extends AbstractController
             return $this->redirectToRoute('app_note_show', ['slug' => $note->getSlug()]);
         }
         return $this->render('note/new.html.twig', [
-            'noteForm' => $form
+            'noteForm' => $form,
         ]);
     }
 

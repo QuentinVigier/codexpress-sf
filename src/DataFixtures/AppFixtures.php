@@ -5,7 +5,12 @@ namespace App\DataFixtures;
 use Faker\Factory;
 use App\Entity\User;
 use App\Entity\Category;
+use App\Entity\Like;
+use App\Entity\Network;
 use App\Entity\Note;
+use App\Entity\Offer;
+use App\Entity\Subscription;
+use App\Entity\View;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -58,6 +63,30 @@ class AppFixtures extends Fixture
             $manager->persist($category);
         }
 
+         // Création des offres
+        // Offre 1 : Freemium
+        $offer1 = new Offer();
+        $offer1->setName('Freemium')
+            ->setPrice('0.00')
+            ->setFeatures('Accès limité aux fonctionnalités de base, publicités affichées');
+        $manager->persist($offer1);
+
+        // Offre 2 : Premium
+        $offer2 = new Offer();
+        $offer2->setName('Premium')
+            ->setPrice('9.99')
+            ->setFeatures('Accès à toutes les fonctionnalités, sans publicité');
+        $manager->persist($offer2);
+
+        // Offre 3 : Business
+        $offer3 = new Offer();
+        $offer3->setName('Business')
+            ->setPrice('29.99')
+            ->setFeatures('Accès complet, gestion multi-utilisateur, support prioritaire');
+        $manager->persist($offer3);
+
+        $manager->flush();
+
         // 10 utilisateurs
         for ($i = 0; $i < 10; $i++) {
             $username = $faker->userName; // Génére un username aléatoire
@@ -66,26 +95,70 @@ class AppFixtures extends Fixture
             $user
                 ->setEmail($usernameFinal . '@' . $faker->freeEmailDomain)
                 ->setUsername($username)
+                ->setImage($faker->imageUrl(200, 200, 'people'))
                 ->setPassword($this->hash->hashPassword($user, 'admin'))
                 ->setRoles(['ROLE_USER'])
-                ;
+            ;
             $manager->persist($user);
 
-            for ($j=0; $j < 10; $j++) { 
+            $sub = new Subscription();
+            $sub->setOffer($faker->randomElement([$offer1, $offer2, $offer3]))
+                ->setCreator($user)
+                ->setStartDate(new \DateTimeImmutable())
+                ->setEndDate(new \DateTimeImmutable())
+            ;
+            $manager->persist($sub);
+
+            $network1 = new Network();
+            $network1->setName('github')
+                ->setUrl('https://github.com/quentin-dev')
+                ->setCreator($user)
+            ;
+            $manager->persist($network1);
+
+            $network2 = new Network();
+            $network2->setName('twitter')
+                ->setUrl('https://twitter.com/quentin_dev')
+                ->setCreator($user)
+            ;
+            $manager->persist($network2);
+
+            $network3 = new Network();
+            $network3->setName('facebook')
+                ->setUrl('https://www.facebook.com/in/quentin-dev/')
+                ->setCreator($user)
+            ;
+            $manager->persist($network3);
+
+            for ($j = 0; $j < 10; $j++) {
                 $note = new Note();
                 $note
                     ->setTitle($faker->sentence())
                     ->setSlug($this->slug->slug($note->getTitle()))
                     ->setContent($faker->randomHtml())
                     ->setPublic($faker->boolean(50))
-                    ->setViews($faker->numberBetween(100, 10000))
                     ->setCreator($user)
                     ->setCategory($faker->randomElement($categoryArray))
-                    ;
+                ;
                 $manager->persist($note);
+
+                for ($k = 0; $k<500; $k++) {
+                    $view = new View();
+                    $view
+                        ->setNote($note)
+                        ->setIpAddress($faker->ipv4)
+                    ;
+                    $manager->persist($view);
+                }
+
+                    $like = new Like();
+                    $like
+                        ->setNote($note)
+                        ->setCreator($user)
+                    ;
+                    $manager->persist($like);
             }
         }
-
         $manager->flush();
     }
 }

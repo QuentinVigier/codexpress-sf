@@ -29,9 +29,6 @@ class Note
     #[ORM\Column]
     private ?bool $is_public = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $views = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
@@ -52,12 +49,25 @@ class Note
     #[ORM\JoinColumn(nullable: false)]
     private ?User $creator = null;
 
+    /**
+     * @var Collection<int, View>
+     */
+    #[ORM\OneToMany(targetEntity: View::class, mappedBy: 'note', orphanRemoval: true)]
+    private Collection $view;
+
+    /**
+     * @var Collection<int, Like>
+     */
+    #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'note', orphanRemoval: true)]
+    private Collection $likes;
+
     public function __construct()
     {
         $this->notifications = new ArrayCollection(); // initialisation du tableau de notifications
         $this->is_public = false; // initialisation du booléen à false
         $this->title = uniqid('note-'); // initialisation du titre au GUID
-        $this->views = 0; // initialisation du compteur de vues
+        $this->view = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -122,18 +132,6 @@ class Note
     public function setPublic(bool $is_public): static
     {
         $this->is_public = $is_public;
-
-        return $this;
-    }
-
-    public function getViews(): ?string
-    {
-        return $this->views;
-    }
-
-    public function setViews(string $views): static
-    {
-        $this->views = $views;
 
         return $this;
     }
@@ -212,6 +210,66 @@ class Note
     public function setCreator(?User $creator): static
     {
         $this->creator = $creator;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, View>
+     */
+    public function getView(): Collection
+    {
+        return $this->view;
+    }
+
+    public function addView(View $view): static
+    {
+        if (!$this->view->contains($view)) {
+            $this->view->add($view);
+            $view->setNote($this);
+        }
+
+        return $this;
+    }
+
+    public function removeView(View $view): static
+    {
+        if ($this->view->removeElement($view)) {
+            // set the owning side to null (unless already changed)
+            if ($view->getNote() === $this) {
+                $view->setNote(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Like>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Like $like): static
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+            $like->setNote($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Like $like): static
+    {
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getNote() === $this) {
+                $like->setNote(null);
+            }
+        }
 
         return $this;
     }

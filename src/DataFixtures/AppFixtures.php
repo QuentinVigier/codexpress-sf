@@ -136,6 +136,7 @@ class AppFixtures extends Fixture
                     ->setTitle($faker->sentence())
                     ->setSlug($this->slug->slug($note->getTitle()))
                     ->setContent($faker->randomHtml())
+                    ->setPremium($faker->boolean(50))
                     ->setPublic($faker->boolean(50))
                     ->setCreator($user)
                     ->setCategory($faker->randomElement($categoryArray))

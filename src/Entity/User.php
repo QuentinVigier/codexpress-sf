@@ -82,6 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->networks = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->subscriptions = new ArrayCollection();
+        $this->image = 'default.png';
     }
 
     #[ORM\PrePersist]

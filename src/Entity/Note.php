@@ -61,6 +61,9 @@ class Note
     #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'note', orphanRemoval: true)]
     private Collection $likes;
 
+    #[ORM\Column]
+    private ?bool $is_premium = null;
+
     public function __construct()
     {
         $this->notifications = new ArrayCollection(); // initialisation du tableau de notifications
@@ -270,6 +273,18 @@ class Note
                 $like->setNote(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isPremium(): ?bool
+    {
+        return $this->is_premium;
+    }
+
+    public function setPremium(bool $is_premium): static
+    {
+        $this->is_premium = $is_premium;
 
         return $this;
     }

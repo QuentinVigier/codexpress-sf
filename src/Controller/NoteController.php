@@ -64,7 +64,7 @@ class NoteController extends AbstractController
         }
 
         $note = new Note();
-        $user = $this->getUser();  // Get the currently logged-in user
+        $user = $this->getUser();  
         $form = $this->createForm(NoteType::class, $note, [
             'current_user' => $user,  // Pass the current user to the form
         ]);

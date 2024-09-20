@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Note;
+use App\Entity\View;
 use App\Form\NoteType;
 use App\Repository\NoteRepository;
 use App\Repository\UserRepository;
@@ -32,9 +33,20 @@ class NoteController extends AbstractController
     }
 
     #[Route('/n/{slug}', name: 'app_note_show', methods: ['GET'])]
-    public function show(string $slug, NoteRepository $nr): Response
+    public function show(string $slug, NoteRepository $nr, Request $request, EntityManagerInterface $em): Response
     {
         $note = $nr->findOneBySlug($slug);
+        if (!$note) {
+            throw $this->createNotFoundException('Note not found');
+        }
+
+        //TODO: A DEPLACER DANS UN SERVICE
+        $view = new View();
+        $view->setNote($note)
+            ->setIpAddress($request->getClientIp());
+        $em->persist($view);
+        $em->flush();
+
         // TODO: Mettre en place le filtre pour les notes privées
         return $this->render('note/show.html.twig', [
             'note' => $nr->findOneBySlug($slug),

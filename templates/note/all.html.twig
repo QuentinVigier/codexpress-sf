@@ -9,10 +9,12 @@
             <p class="mb-4">Find out what's new on CodeXpress</p>
         </div>
     </header>
+    {% cache 'allNotes' ttl(3600) %}
     <main class="max-w-screen-lg px-4 py-5 mx-auto md:py-16">
         {{ include('components/notes-list.html.twig') }}
     </main>
     <div class="px-4 pb-6 text-center md:pb-16">
         {{ knp_pagination_render(allNotes) }}
     </div>
+    {% endcache %}
 {% endblock %}

@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Repository\NoteRepository;
+use App\Service\EmailNotificationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -21,5 +23,20 @@ class HomeController extends AbstractController
             'lastNotes' => $lastNotes, // Envoie des notes à la vue Twig
             'totalNotes' => count($nr->findAll()) // Renvoi le compte total de notes
         ]);
+    }
+
+    #[Route('/email', name: 'app_email')]
+    public function testEmail(Request $request, EmailNotificationService $ems): Response
+    {
+        $case = $request->query->get('case');
+        if ($case) {
+            $ems->sendEmail($this->getUser()->getEmail(), $case);
+        }
+        return new Response("
+            Email sent to {$this->getUser()->getEmail()} <br>
+            Choose a case: <br>
+            <a href='/email?case=premium'>Premium</a> <br>
+            <a href='/email?case=registration'>Registration</a>
+        ");
     }
 }

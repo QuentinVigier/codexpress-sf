@@ -41,7 +41,7 @@ class EmailNotificationService
             return $e->getMessage();
         }
 
-        // ...
+        // symfony console create:service Test == Créer un service
     }
 
 }

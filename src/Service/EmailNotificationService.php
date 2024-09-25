@@ -12,12 +12,15 @@ class EmailNotificationService
     {
         $this->mailer = $mailer;
     }
-    public function sendEmail(string $receiver, string $case): ?string
+    public function sendEmail(string $receiver, array $case): ?string
     {
         try {
             $email = (new TemplatedEmail())  // Email avec template Twig
                 ->from('hello@codexpress.fr')
-                ->to($receiver);
+                ->to($receiver)
+                ->subject($case['subject'])
+                ->priority(Email::PRIORITY_HIGH)
+                ->htmlTemplate('email/'. $case['template'] .'.html.twig');
                 //->cc('cc@example.com')
                 //->bcc('bcc@example.com')
                 //->replyTo('fabien@example.com')
